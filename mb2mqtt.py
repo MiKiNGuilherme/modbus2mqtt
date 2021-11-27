@@ -58,7 +58,7 @@ class ClienteMODBUS():
                 print('-' * 100)
                 print('ModbusTCP/MQTT Client'.center(100))
                 print('-' * 100)
-                sel = input("Available services: \n1- Start a read \n2- Stop a read \n3- Write a value \n4- Configuration \n5- Exit \nService N°: ")
+                sel = input("Available services: \n1- Start a read \n2- Stop a read \n3- Write a value \n4- Configuration \n5- About \n6- Exit \nService N°: ")
                 if sel == '1':
                     print('\nAvailable Function Codes:')
                     print("1- Coil Status \n2- Input Status \n3- Holding Register \n4- Input Register")
@@ -196,28 +196,28 @@ class ClienteMODBUS():
                         self._readingthread = False
                         print("\nStopping reading..\n")
                     except Exception as e:
-                        print('ERRO: ', e.args)
-                        print('\nO Cliente não conseguiu escrever.. \nVoltando ao menu..\n\n')
+                        print('ERROR: ', e.args)
+                        print('\nUnable to sotp reading.. \nReturning to menu..\n\n')
                         sleep(1.5)
 
                 elif sel == '3':
-                    print('\nQual tipo de dado deseja escrever? \n1- Coil Status \n2- Holding Register')
+                    print('\nWhat kind of data do you want to write? \n1- Coil Status \n2- Holding Register')
                     while True:
-                        tipo = int(input("Tipo: "))
+                        tipo = int(input("Type: "))
                         if tipo > 2:
-                            print('Digite um tipo válido..')
+                            print('Enter a valid type..')
                             sleep(0.5)
                         else:
                             break
-                    addr = input(f'Digite o endereço: ')
-                    valor = int(input(f'Digite o valor que deseja escrever: '))
+                    addr = input(f'Address: ')
+                    valor = int(input(f'What to write: '))
                     try:
-                        print('\nEscrevendo..')
+                        print('\nWriting..')
                         sleep(0.5)
                         self.escreveDado(int(tipo), int(addr), valor)
                     except Exception as e:
-                        print('ERRO: ', e.args)
-                        print('\nO Cliente não conseguiu escrever.. \nVoltando ao menu..\n\n')
+                        print('ERROR: ', e.args)
+                        print('\nUnable to write.. \nReturning to menu..\n\n')
                         sleep(1.5)
 
                 elif sel == '4':
@@ -226,7 +226,7 @@ class ClienteMODBUS():
                     while True:
                         tpconfig = input("Set up: ")
                         if tpconfig not in '123':
-                            print('Digite um tipo de configuração válido.. (1, 2 ou 3)')
+                            print('Enter a valid configuration type.. (1, 2 or 3)')
                             sleep(0.5)
                         else:
                             break
@@ -239,63 +239,63 @@ class ClienteMODBUS():
                         while True:
                             config = input("Set up: ")
                             if config not in '12345':
-                                print('Digite um tipo de configuração válido.. (1, 2, 3, 4 ou 5)')
+                                print('Enter a valid configuration type.. (1, 2, 3, 4 or 5)')
                                 sleep(0.5)
                             else:
                                 break
                         if int(config) == 1:
-                            ipserv = str(input(' Novo endereço IP: '))
+                            ipserv = str(input(' New IP address: '))
                             try:
                                 self._cliente.close()
                                 self._server_ip = ipserv
                                 self._cliente = ModbusClient(host=self._server_ip)
                                 self._cliente.open()
-                                print(f'\nServer IP alterado para {ipserv} com sucesso!!\n')
+                                print(f'\nIP address successfully chaged to {ipserv}!!\n')
                                 sleep(0.5)
                             except Exception as e:
-                                print('ERRO: ', e.args)
-                                print('\nNão foi possível alterar o endereço IP.. \nVoltando ao menu..\n\n')
+                                print('ERROR: ', e.args)
+                                print('\nUnable to change IP address.. \nReturning to menu..\n\n')
                                 sleep(0.5)
                         elif int(config) == 2:
-                            porttcp = input(' Nova porta TCP: ')
+                            porttcp = input(' New TCP port: ')
                             try:
                                 self._cliente.close()
                                 self._port = int(porttcp)
                                 self._cliente = ModbusClient(port=self._port)
                                 self._cliente.open()
-                                print(f'\nTCP port alterado para {porttcp} com sucesso!!\n')
+                                print(f'\nTCP port successfully changed to {porttcp}!!\n')
                                 sleep(0.5)
                             except Exception as e:
-                                print('ERRO: ', e.args)
-                                print('\nNão foi possível alterar a porta.. \nVoltando ao menu..\n\n')
+                                print('ERROR: ', e.args)
+                                print('\nUnable to change TCP port.. \nReturning to menu..\n\n')
                                 sleep(0.5)
                         elif int(config) == 3:
                             while True:
-                                iddevice = input(' Novo device ID: ')
+                                iddevice = input(' New device ID: ')
                                 if 0 <= int(iddevice) < 256:
                                     break
                                 else:
-                                    print('Device ID deve ser um número inteiro entre 0 e 256.', end='')
+                                    print('Device ID must be an integer between 0 and 256.', end='')
                                     sleep(0.5)
                             try:
                                 self._cliente.close()
                                 self._device_id = int(iddevice)
                                 self._cliente = ModbusClient(unit_id=self._device_id)
                                 self._cliente.open()
-                                print(f'\nDevice ID alterado para {iddevice} com sucesso!!\n')
+                                print(f'\nDevice ID successfully changed to {iddevice}!!\n')
                                 sleep(0.5)
                             except Exception as e:
-                                print('ERRO: ', e.args)
-                                print('\nNão foi possível alterar o ID do device.. \nVoltando ao menu..\n\n')
+                                print('ERROR: ', e.args)
+                                print('\nUnable to change device ID.. \nReturning to menu..\n\n')
                                 sleep(0.5)
                         elif int(config) == 4:
-                            scant = input(' Novo tempo de varredura [s]: ')
+                            scant = input(' New scan time [s]: ')
                             try:    
                                 self._scan_time = float(scant)
-                                print(f'\nScan_time alterado para {scant}s com sucesso!!\n')
+                                print(f'\nScan time successfully changed to {scant}s!!\n')
                             except Exception as e:
-                                print('ERRO: ', e.args)
-                                print('\nNão foi possível alterar o tempo de varredura.. \nVoltando ao menu..\n\n')
+                                print('ERROR: ', e.args)
+                                print('\nUnable to change Scan Time.. \nReturning to menu..\n\n')
                                 sleep(0.5)
                         elif int(config) == 5:
                             print('\nGetting back...\n')
@@ -312,44 +312,44 @@ class ClienteMODBUS():
                         while True:
                             config = input("Set up: ")
                             if config not in '123':
-                                print('Digite um tipo de configuração válido.. (1, 2 ou 3)')
+                                print('Enter a valid configuration type.. (1, 2 or 3)')
                                 sleep(0.5)
                             else:
                                 break
                         if int(config) == 1:
-                            ipserv = str(input(' Novo endereço IP do broker: '))
+                            ipserv = str(input(' New Broker IP address: '))
                             try:
                                 self._broker_addrs = ipserv
-                                print('\n--> Testando comunicação com o Broker MQTT.. ', end='')
+                                print('\n--> Testing MQTT BROKER Connection.. ', end='')
                                 sleep(0.5)
                                 try:
                                     if self._client_mqtt.connect(self._broker_addrs, self._broker_port, 60) != 0:
-                                        print("Não foi possível estabelecer conexão com o Broker MQTT!")
+                                        print("Unable to establish connection with MQTT Broker!")
                                         sys.exit(-1)
                                     else:
-                                        print(' --> Tudo OK')
-                                        print(f'Broker IP alterado para {ipserv} com sucesso!!\n')
+                                        print(' --> OK')
+                                        print(f'Broker IP successfully changed to {ipserv}!!\n')
                                         self._status_conn_mqtt = True
                                         sleep(0.2)
                                 except Exception as e:
-                                    print('ERRO: ', e.args)
-                                    print("\nNão foi possível estabelecer conexão com o Broker MQTT!\nVerifique se o Endereço IPv4 está OK e tente novamente..")
-                                    print('Seguindo sem conexão com o Broker MQTT..')
+                                    print('ERROR: ', e.args)
+                                    print("\nCould not establish connection with MQTT Broker!\nCheck if IP Address is OK and try again..")
+                                    print('Following without connection with MQTT Broker..')
                                     self._status_conn_mqtt = False
                                 self._client_mqtt.disconnect()
                             except Exception as e:
-                                print('ERRO: ', e.args)
-                                print('\nNão foi possível alterar o endereço IP.. \nVoltando ao menu..\n\n')
+                                print('ERROR: ', e.args)
+                                print('\nUnable to change Broker IP address.. \nReturning to menu..\n\n')
                                 sleep(0.5)
                         elif int(config) == 2:
-                            portbroker = input(' Nova porta: ')
+                            portbroker = input(' New port: ')
                             try:
                                 self._broker_port = portbroker
-                                print(f'\nPorta alterada para {portbroker} com sucesso!!\n')
+                                print(f'\nPort successfully changed to {portbroker}!!\n')
                                 sleep(0.5)
                             except Exception as e:
-                                print('ERRO: ', e.args)
-                                print('\nNão foi possível alterar a porta.. \nVoltando ao menu..\n\n')
+                                print('ERROR: ', e.args)
+                                print('\nUnable to change MQTT port.. \nReturning to menu..\n\n')
                                 sleep(0.5)
                         elif int(config) == 3:
                             print('\nGetting back...\n')
@@ -361,13 +361,21 @@ class ClienteMODBUS():
                         print('\nGetting back...\n')
                         sleep(0.5)
                 elif sel == '5':
+                    print('-' * 80)
+                    print('ModbusTCP/MQTT - (Version 1 - 2021)'.center(80))
+                    print('\nDeveloped by: Guilherme Balduino Lopes (MiKiN)')
+                    print('Email: guilhermebalopes@ufu.br\n')
+                    print('-' * 80)
+                elif sel == '6':
                     confirm_close = input('\nType "YES" to confirm you want to exit the app: ').capitalize()[0]
                     if confirm_close == 'Y':
                         sleep(0.2)
                         print('\nShutting down...\n')
-                        sleep(1)
+                        self._readingthread = False
                         self._cliente.close()
+                        sleep(1)
                         atendimento = False
+                        
                     else:
                             print('\nGetting back..')
                 else:
@@ -524,16 +532,16 @@ class ClienteMODBUS():
         """
         try:
             if tipo == 1:
-                print(f'Valor {valor} escrito no endereço {addr}\n')
+                print(f'{valor} written at the specified address ({addr})\n')
                 return self._cliente.write_single_coil(addr - 1, valor)
             elif tipo == 2:
-                print(f'Valor {valor} escrito no endereço {addr}\n')
+                print(f'{valor} written at the specified address ({addr})\n')
                 return self._cliente.write_single_register(addr - 1, valor)
             else:
-                print('Tipo de escrita inválido..\n')
+                print('Invalid writing type..\n')
 
         except Exception as e:
-            print('ERRO: ', e.args)
+            print('ERROR: ', e.args)
 
 
     def mqttPublish(self, topic, msg):
@@ -542,14 +550,14 @@ class ClienteMODBUS():
         """
         try:
             if self._client_mqtt.connect(self._broker_addrs, self._broker_port, 60) != 0:
-                print("Não foi possível estabelecer conexão com o Broker MQTT!")
+                print("Unable to establish connection with MQTT Broker!")
                 sys.exit(-1)
             self._client_mqtt.publish(topic, msg)
             sleep(0.2)
             self._client_mqtt.disconnect()
         except Exception as e:
-            print('ERRO: ', e.args, end='')
-            print('Erro ao tentar publicar no broker, confira o endereço IP e a porta do mesmo..')
+            print('ERROR: ', e.args, end='')
+            print('Error when trying to publish to broker, please check IP address and port...')
             self._status_conn_mqtt = False
 
         
@@ -568,8 +576,8 @@ class ClienteMODBUS():
                     i += 1
                     sleep(0.2)
             except Exception as e:
-                print('ERRO: ', e.args, end='')
-                print('Erro ao tentar publicar no broker, confira o endereço IP e a porta do mesmo..')
+                print('ERROR: ', e.args, end='')
+                print('Error when trying to publish to broker, please check IP address and port...')
 
         elif display == 2:
             try:
@@ -582,8 +590,8 @@ class ClienteMODBUS():
                     i += 1
                     sleep(0.2)
             except Exception as e:
-                print('ERRO: ', e.args, end='')
-                print('Erro ao tentar publicar no broker, confira o endereço IP e a porta do mesmo..')
+                print('ERROR: ', e.args, end='')
+                print('Error when trying to publish to broker, please check IP address and port...')
 
         elif display == 3:
             try:
@@ -596,5 +604,5 @@ class ClienteMODBUS():
                     i += 1
                     sleep(0.2)
             except Exception as e:
-                print('ERRO: ', e.args, end='')
-                print('Erro ao tentar publicar no broker, confira o endereço IP e a porta do mesmo..')
+                print('ERROR: ', e.args, end='')
+                print('Error when trying to publish to broker, please check IP address and port...')
