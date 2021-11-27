@@ -361,11 +361,13 @@ class ClienteMODBUS():
                         print('\nGetting back...\n')
                         sleep(0.5)
                 elif sel == '5':
-                    print('-' * 80)
-                    print('ModbusTCP/MQTT - (Version 1 - 2021)'.center(80))
+                    print()
+                    print('-' * 100)
+                    print('ModbusTCP/MQTT - (Version 1 - 2021)'.center(100))
                     print('\nDeveloped by: Guilherme Balduino Lopes (MiKiN)')
                     print('Email: guilhermebalopes@ufu.br\n')
-                    print('-' * 80)
+                    print('-' * 100)
+                    print()
                 elif sel == '6':
                     confirm_close = input('\nType "YES" to confirm you want to exit the app: ').capitalize()[0]
                     if confirm_close == 'Y':
