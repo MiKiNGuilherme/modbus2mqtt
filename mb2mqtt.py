@@ -32,10 +32,21 @@ class ClienteMODBUS():
         Método para atendimento do usuário
         """
         try:
-            print('\n--> Testing Modbus Connection.. ', end='')
-            self._cliente.open()
-            print('OK')
-            print('--> Testing MQTT BROKER Connection.. ', end='')
+            print('-' * 100)
+            print('Welcome to Modbus2MQTT Gateway!!'.center(100))
+            try:
+                self._server_ip = input('\nPlease, enter the Modbus TCP IP Address: ')
+                self._port = input('Enter the TCP Port: ')
+                print('\n--> Testing Modbus Connection.. ', end='')
+                self._cliente.open()
+                sleep(0.3)
+                print('--> OK')
+            except Exception as e:
+                print('ERROR: ', e.args)
+
+            self._broker_addrs = str(input('\nPlease, now enter the MQTT Broker Server: '))
+            self._broker_port = int(input('Enter the Port: '))
+            print('\n--> Testing MQTT BROKER Connection.. ', end='')
             sleep(1)
             try:
                 if self._client_mqtt.connect(self._broker_addrs, self._broker_port, 60) != 0:
@@ -46,7 +57,7 @@ class ClienteMODBUS():
                     self._status_conn_mqtt = True
             except Exception as e:
                 print('ERROR: ', e.args)
-                print("\nUnable to establish connection with MQTT Broker!\nCheck if the IPv4 Address is OK and try again...")
+                print("\nUnable to establish connection with MQTT Broker!\nCheck if the IP Address is OK and try again...")
                 print('Following without connection with MQTT Broker..')
             self._client_mqtt.disconnect()
         except Exception as e:
@@ -55,10 +66,10 @@ class ClienteMODBUS():
         try:
             atendimento = True
             while atendimento:
-                print('-' * 100)
+                print('\n', '-'*100)
                 print('ModbusTCP/MQTT Client'.center(100))
-                print('-' * 100)
-                sel = input("Available services: \n1- Start a read \n2- Stop a read \n3- Write a value \n4- Configuration \n5- About \n6- Exit \nService N°: ")
+                print('-'*100)
+                sel = input("Available services: \n1- Start a read \n2- Stop reading \n3- Write a value \n4- Configuration \n5- About \n6- Exit \nService N°: ")
                 if sel == '1':
                     print('\nAvailable Function Codes:')
                     print("1- Coil Status \n2- Input Status \n3- Holding Register \n4- Input Register")
@@ -86,12 +97,12 @@ class ClienteMODBUS():
                         if val == 1: #valores decimais
                             addr = int(input(f'\nModbus Starting Address: '))
                             leng = int(input(f'Quantity of Registers: '))
-                            print('\nReading has started and data is being published to the specified topic...\n')
                             sleep(0.5)
                             try:
                                 self._readingthread = True
                                 self._threadread = Thread(target=self.readThread, args=(tipo, 1, addr, leng, func,))
                                 self._threadread.start()
+                                print('\nReading has started and data is being published to the specified topic...\n')
                             except Exception as e:
                                 print('ERRO: ', e.args)
                                 try:
@@ -364,7 +375,7 @@ class ClienteMODBUS():
                     print()
                     print('-' * 100)
                     print('ModbusTCP/MQTT - (Version 1 - 2021)'.center(100))
-                    print('\nDeveloped by: Guilherme Balduino Lopes (MiKiN)')
+                    print('\nDeveloped by: Guilherme Balduino Lopes')
                     print('Email: guilhermebalopes@ufu.br\n')
                     print('-' * 100)
                     print()
